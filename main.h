@@ -30,7 +30,7 @@ int _strcmp(char *s1, char *s2);
 int my_execvp(char *name, char **argv);
 char *_strstr(register char *string, char *substring);
 char *_strcat(char *dest, char *src);
-void *_realloc(void * ptr, size_t old_size, size_t new_size);
+void *_realloc(void *ptr, size_t old_size, size_t new_size);
 char *_memcpy(char *dest, char *src, unsigned int n);
 
 #endif
