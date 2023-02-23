@@ -8,7 +8,7 @@
 
 void print_prompt(void)
 {
-	char *prompt = "#cisfun$ ";
+	char *prompt = "";
 
 	write(2, prompt, strlen(prompt));
 
