@@ -9,12 +9,7 @@
 void print_prompt(void)
 {
 	char *prompt = "#cisfun$ ";
-	int i = 0;
 
-	while (prompt[i] != '\0')
-	{
-		_putchar(prompt[i]);
-		i++;
-	}
+	write(2, prompt, strlen(prompt));
 
 }
