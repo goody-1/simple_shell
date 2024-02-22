@@ -2,7 +2,7 @@
 
 char *prompt(void)
 {
-	char *prompt = "#cisfun$ ", *input = NULL;
+	char *prompt = "#custom$ ", *input = NULL;
 	size_t len = 0;
 	ssize_t nread;
 

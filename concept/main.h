@@ -20,6 +20,6 @@ char *trim_newline(char *str);
 void free_list(char **list);
 char **word_list(char *str, char *delim);
 void handle_exit(int signum __attribute__((unused)));
-void print_environment();
+void print_environment(void);
 
 #endif

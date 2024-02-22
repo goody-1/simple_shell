@@ -46,7 +46,7 @@ char **split_string(const char *str, const char *delimiters,
 
 void perror_mem_alloc(void)
 {
-	perror("Memory allocation error");
+	perror("Memory allocation");
 	exit(EXIT_FAILURE);
 }
 

@@ -8,6 +8,8 @@ int main(void)
 	size_t num_words;
 	pid_t child, ppid = getpid();
 
+	printf("Parent pid is %u\n", ppid);
+
 	signal(SIGINT, handle_exit);
 	while (1)
 	{
@@ -18,11 +20,14 @@ int main(void)
 		child = fork();
 		if (child == -1)
 		{
+			free_list(list);
+			free(str);
 			perror("fork");
 			return (1);
 		}
 		if (child == 0)
 		{
+			printf("My pid is %u and my parent pid is %u\n", getpid(), ppid);
 			if (strcmp(list[0], "EOL") == 0)
 			{
 				free_list(list);
@@ -78,9 +83,10 @@ void handle_exit(int signum __attribute__((unused)))
 {
 	exit(EXIT_SUCCESS);
 }
-void print_environment()
+void print_environment(void)
 {
-    while (*environ != NULL) {
+    while (*environ != NULL)
+	{
         printf("%s\n", *environ);
         environ++;
     }
