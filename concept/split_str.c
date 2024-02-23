@@ -8,7 +8,7 @@ char **split_string(const char *str, const char *delimiters,
 	char **words;
 
 	if (!str)
-		perror_handler("NULL");
+		perror_handler(NULL);
 
 	copy = strdup(str);
 	if (copy == NULL)
@@ -43,7 +43,8 @@ char **split_string(const char *str, const char *delimiters,
 
 void perror_handler(char *error)
 {
-	perror(error);
+	if (error)
+		perror(error);
 	exit(EXIT_FAILURE);
 }
 
