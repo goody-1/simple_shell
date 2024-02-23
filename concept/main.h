@@ -23,7 +23,7 @@ void handle_exec(char **list, char *str, int ppid);
 void print_environment(void);
 
 /* defined in split_str */
-void perror_mem_alloc(char *error);
+void perror_handler(char *error);
 char *trim_newline(char *str);
 
 /* defined in utilities */

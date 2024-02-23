@@ -3,23 +3,20 @@
 char **split_string(const char *str, const char *delimiters,
 					size_t *num_words)
 {
-	char *copy, *token;
+	char *copy, *token, *mem_error = "Memory";
 	size_t capacity = 10; /* Initial capacity of the array */
 	char **words;
 
-	if (str == NULL)
-	{
-		perror("Null string");
-		exit(EXIT_FAILURE);
-	}
+	if (!str)
+		perror_handler("NULL");
 
 	copy = strdup(str);
 	if (copy == NULL)
-		perror_mem_alloc();
+		perror_handler(mem_error);
 
 	words = malloc(capacity * sizeof(char *));
-	if (words == NULL)
-		perror_mem_alloc();
+	if (!words)
+		perror_handler(mem_error);
 	*num_words = 0;
 
 	/* Tokenize the string using strtok */
@@ -31,7 +28,7 @@ char **split_string(const char *str, const char *delimiters,
 			capacity *= 2;
 			words = realloc(words, capacity * sizeof(char *));
 			if (words == NULL)
-				perror_mem_alloc();
+				perror_handler(mem_error);
 		}
 
 		/* Allocate memory for the token and store it in the array */
@@ -44,9 +41,9 @@ char **split_string(const char *str, const char *delimiters,
 	return (words);
 }
 
-void perror_mem_alloc(void)
+void perror_handler(char *error)
 {
-	perror("Memory allocation");
+	perror(error);
 	exit(EXIT_FAILURE);
 }
 
