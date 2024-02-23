@@ -6,15 +6,30 @@ char *prompt(void)
 	size_t len = 0;
 	ssize_t nread;
 
-
 	printf("%s", prompt);
 	nread = getline(&input, &len, stdin);
 
 	if (nread == -1)
 	{
 		free(input);
-		return ("EOL");
+		return (NULL);
+	}
+	return (input);
+}
+
+char *read_line(FILE *input)
+{
+	char *line = NULL;
+	size_t len = 0;
+	ssize_t nread;
+
+	nread = getline(&line, &len, input);
+
+	if (nread == -1)
+	{
+		free(line);
+		return (NULL);
 	}
 
-	return (input);
+	return (line);
 }
