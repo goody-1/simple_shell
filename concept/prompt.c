@@ -6,7 +6,7 @@ char *prompt(void)
 	size_t len = 0;
 	ssize_t nread;
 
-	printf("%s", prompt);
+	write(STDOUT_FILENO, prompt, strlen(prompt));
 	nread = getline(&input, &len, stdin);
 
 	if (nread == -1) /* get EOF or EOL; CTRL + D */
