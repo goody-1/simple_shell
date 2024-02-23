@@ -9,7 +9,7 @@ int main(void)
 
 	printf("Parent pid is %u\n", ppid);
 
-	if (isatty(STDIN_FILENO))
+	if (isatty(STDIN_FILENO)) /* check if program is running interactively */
 	{
 		while (1)
 		{
@@ -21,7 +21,7 @@ int main(void)
 		}
 	}
 	else
-	{
+	{ /* program is running in non-interactive mode */
 		FILE *input_file = stdin;
 		char *line;
 
@@ -48,32 +48,30 @@ void handle_exec(char **list, char *str, int ppid)
 	pid_t child = fork();
 
 	if (child == -1)
-	{
 		handle_exit(list, str, ppid, EXIT_FAILURE, "fork", no_kill);
-	}
+
 	if (child == 0)
 	{
 		printf("My pid is %u and my parent pid is %u\n", getpid(), ppid);
+
+		 /* case where input to getline function is -1: CTRL + D */
 		if (!list[0])
-		{
 			handle_exit(list, NULL, ppid, EXIT_SUCCESS, NULL, terminate);
-		}
+
 		if (strcmp(list[0], "env") == 0 || strcmp(list[0], "printenv") == 0)
 		{
 			print_environment();
 			handle_exit(list, str, ppid, EXIT_SUCCESS, NULL, no_kill);
 		}
 		if (strcmp(list[0], "exit") == 0)
-		{
 			handle_exit(list, str, ppid, EXIT_SUCCESS, NULL, terminate);
-		}
+
+		/* handle commands */
 		if (execve(list[0], list, environ) == -1)
-		{
 			handle_exit(list, str, ppid, EXIT_FAILURE, "./shell", no_kill);
-		}
 	}
 	else
-		wait(&status);
+		wait(&status); /* wait for child process to finish */
 }
 
 void print_environment(void)

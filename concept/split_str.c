@@ -51,6 +51,7 @@ char *trim_newline(char *str)
 {
 	size_t len = strlen(str);
 
+	/* trim spaces and newlines */
 	while (len > 0 && (str[len - 1] == '\n' || str[len - 1] == '\r'
 			|| str[len - 1] == ' '))
 	{

@@ -9,7 +9,7 @@ char *prompt(void)
 	printf("%s", prompt);
 	nread = getline(&input, &len, stdin);
 
-	if (nread == -1)
+	if (nread == -1) /* get EOF or EOL; CTRL + D */
 	{
 		free(input);
 		return (NULL);
