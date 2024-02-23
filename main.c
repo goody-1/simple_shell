@@ -6,6 +6,7 @@ int main(void)
 	char *str, **list;
 	size_t num_words;
 	pid_t ppid = getpid();
+	FILE *input_file = stdin;
 
 	if (isatty(STDIN_FILENO)) /* check if program is running interactively */
 	{
@@ -24,8 +25,6 @@ int main(void)
 	}
 	else
 	{ /* program is running in non-interactive mode */
-		FILE *input_file = stdin;
-
 		while ((str = read_line(input_file)) != NULL)
 		{
 			list = split_string(str, " \t\n", &num_words);
