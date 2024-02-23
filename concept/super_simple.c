@@ -4,90 +4,83 @@
 int main(void)
 {
 	char *str, **list;
-	int status;
 	size_t num_words;
-	pid_t child, ppid = getpid();
+	pid_t ppid = getpid();
 
 	printf("Parent pid is %u\n", ppid);
 
-	signal(SIGINT, handle_exit);
-	while (1)
+	if (isatty(STDIN_FILENO))
 	{
-		str = prompt();
-		list = split_string(str, " \t\n", &num_words);
-		list[num_words] = NULL;
+		while (1)
+		{
+			str = prompt();
+			list = split_string(str, " \t\n", &num_words);
+			list[num_words] = NULL;
 
-		child = fork();
-		if (child == -1)
-		{
-			free_list(list);
-			free(str);
-			perror("fork");
-			return (1);
+			handle_exec(list, str, ppid);
 		}
-		if (child == 0)
-		{
-			printf("My pid is %u and my parent pid is %u\n", getpid(), ppid);
-			if (strcmp(list[0], "EOL") == 0)
-			{
-				free_list(list);
-				kill(ppid, SIGINT);
-				exit(EXIT_SUCCESS);
-			}
-			if (strcmp(list[0], "env") == 0 || strcmp(list[0], "printenv") == 0)
-			{
-				print_environment();
-				free_list(list);
-				free(str);
-				exit(EXIT_SUCCESS);
-			}
-			if (strcmp(list[0], "exit") == 0)
-			{
-				free_list(list);
-				free(str);
-				kill(ppid, SIGINT);
-				exit(EXIT_SUCCESS);
-			}
-			if (execve(list[0], list, environ) == -1)
-			{
-				perror("execve");
-				exit(EXIT_FAILURE);
-			}
-		}
-		else
-			wait(&status);
-		free_list(list);
-		free(str);
 	}
+	else
+	{
+		FILE *input_file = stdin;
+		char *line;
+
+		while ((line = read_line(input_file)) != NULL)
+		{
+			line[strcspn(line, "\n")] = '\0';
+
+			str = strdup(line);
+			list = split_string(str, " \t\n", &num_words);
+			list[num_words] = NULL;
+
+			handle_exec(list, str, ppid);
+		}
+	}
+
+	free_list(list);
+	free(str);
 	return (0);
 }
 
-void free_list(char **list)
+void handle_exec(char **list, char *str, int ppid)
 {
-	size_t i = 0;
+	int status, no_kill = 0, terminate = 1;
+	pid_t child = fork();
 
-	if (list == NULL)
+	if (child == -1)
 	{
-		return;
+		handle_exit(list, str, ppid, EXIT_FAILURE, "fork", no_kill);
 	}
-
-	while (list[i] != NULL)
+	if (child == 0)
 	{
-		free(list[i]);
-		i++;
+		printf("My pid is %u and my parent pid is %u\n", getpid(), ppid);
+		if (!list[0])
+		{
+			handle_exit(list, NULL, ppid, EXIT_SUCCESS, NULL, terminate);
+		}
+		if (strcmp(list[0], "env") == 0 || strcmp(list[0], "printenv") == 0)
+		{
+			print_environment();
+			handle_exit(list, str, ppid, EXIT_SUCCESS, NULL, no_kill);
+		}
+		if (strcmp(list[0], "exit") == 0)
+		{
+			handle_exit(list, str, ppid, EXIT_SUCCESS, NULL, terminate);
+		}
+		if (execve(list[0], list, environ) == -1)
+		{
+			handle_exit(list, str, ppid, EXIT_FAILURE, "./shell", no_kill);
+		}
 	}
-	free(list);
+	else
+		wait(&status);
 }
 
-void handle_exit(int signum __attribute__((unused)))
-{
-	exit(EXIT_SUCCESS);
-}
 void print_environment(void)
 {
-    while (*environ != NULL)
+	while (*environ != NULL)
 	{
-        printf("%s\n", *environ);
-        environ++;
-    }
+		printf("%s\n", *environ);
+		environ++;
+	}
 }
