@@ -4,13 +4,13 @@ char **split_string(const char *str, const char *delimiters,
 					size_t *num_words)
 {
 	char *copy, *token, *mem_error = "Memory";
-	size_t capacity = 10; /* Initial capacity of the array */
+	size_t capacity = 10, old_size; /* Initial capacity of the array */
 	char **words;
 
 	if (!str)
 		perror_handler(NULL);
 
-	copy = strdup(str);
+	copy = _strdup(str);
 	if (copy == NULL)
 		perror_handler(mem_error);
 
@@ -25,14 +25,15 @@ char **split_string(const char *str, const char *delimiters,
 	{
 		if (*num_words >= capacity)
 		{ /* Check if the array needs to be resized */
+			old_size = capacity;
 			capacity *= 2;
-			words = realloc(words, capacity * sizeof(char *));
+			words = _realloc(words, old_size * sizeof(char *), capacity * sizeof(char *));
 			if (words == NULL)
 				perror_handler(mem_error);
 		}
 
 		/* Allocate memory for the token and store it in the array */
-		words[(*num_words)++] = strdup(token);
+		words[(*num_words)++] = _strdup(token);
 
 		token = strtok(NULL, delimiters); /* Get the next token */
 	}
@@ -50,7 +51,7 @@ void perror_handler(char *error)
 
 char *trim_newline(char *str)
 {
-	size_t len = strlen(str);
+	size_t len = _strlen(str);
 
 	/* trim spaces and newlines */
 	while (len > 0 && (str[len - 1] == '\n' || str[len - 1] == '\r'

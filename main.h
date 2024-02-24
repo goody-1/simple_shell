@@ -19,6 +19,12 @@ char **word_list(char *str, char *delim);
 void handle_exec(char **list, char *str, int ppid);
 
 /*** helper functions ***/
+size_t _strlen(const char *s);
+int _strcmp(char *s1, char *s2);
+char *_strcpy(char *dest, char *src);
+void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
+char *_strdup(const char *src);
+
 /* defined in simple*/
 void print_environment(void);
 

@@ -59,10 +59,10 @@ void handle_exec(char **list, char *str, int ppid)
 		if (!list || !list[0])
 			handle_exit(list, NULL, ppid, EXIT_SUCCESS, NULL, terminate);
 
-		if (strcmp(list[0], "exit") == 0)
+		if (_strcmp(list[0], "exit") == 0)
 			handle_exit(list, str, ppid, EXIT_SUCCESS, NULL, terminate);
 
-		if (strcmp(list[0], "env") == 0 || strcmp(list[0], "printenv") == 0)
+		if (_strcmp(list[0], "env") == 0 || _strcmp(list[0], "printenv") == 0)
 		{
 			print_environment();
 			handle_exit(list, str, ppid, EXIT_SUCCESS, NULL, no_kill);
