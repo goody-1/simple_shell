@@ -1,6 +1,10 @@
 #include "main.h"
 
-
+/**
+ * main - entry to program
+ *
+ * Return: always success
+*/
 int main(void)
 {
 	char *str, **list;
@@ -41,6 +45,15 @@ int main(void)
 	return (0);
 }
 
+/**
+ * handle_exec - handle core execution of shell
+ *
+ * @list: list of words / argument passed to the shell
+ * @str: the string passed
+ * @ppid: the pid of the core process
+ *
+ * Return: void
+*/
 void handle_exec(char **list, char *str, int ppid)
 {
 	int status, no_kill = 0, terminate = 1;
@@ -72,6 +85,11 @@ void handle_exec(char **list, char *str, int ppid)
 	wait(&status); /* wait for child process to finish */
 }
 
+/**
+ * print_environment - print environment when command is entered
+ *
+ * Return: void
+*/
 void print_environment(void)
 {
 	while (*environ != NULL)
