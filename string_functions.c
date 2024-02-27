@@ -77,15 +77,20 @@ int _strcmp(char *s1, char *s2)
 	return (0);
 }
 
+/**
+ * _strdup - duplicates the string
+ * @src: source pointer
+ * Returns: duplicate copy
+ */
 char *_strdup(const char *src)
 {
-	size_t len = _strlen(src) + 1; // Include space for the null terminator
+	size_t len = _strlen(src) + 1; /* Include space for the null terminator */
 	char *dest = malloc(len);
 
 	if (dest == NULL)
-		return NULL;
+		return (NULL);
 
-	return _strcpy(dest, src);
+	return (_strcpy(dest, src));
 }
 
 /**
