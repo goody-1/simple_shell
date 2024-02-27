@@ -38,10 +38,6 @@ int main(void)
 				free(str);
 		}
 	}
-	if (list)
-		free_list(list);
-	if (str)
-		free(str);
 	return (0);
 }
 
