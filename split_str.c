@@ -1,5 +1,13 @@
 #include "main.h"
 
+/**
+ * split_string - this is a function that seperate char into smaller part.
+ * @str: string to be inputed
+ * @delimeters: char used to seperate strings
+ * @num_words: count words in str
+ * Return: return success
+ */
+
 char **split_string(const char *str, const char *delimiters,
 					size_t *num_words)
 {
@@ -42,13 +50,23 @@ char **split_string(const char *str, const char *delimiters,
 	return (words);
 }
 
+/**
+ * perror_handler - this prints out an error message
+ * @error: error message
+ * Rturn: always success
+ */
+
 void perror_handler(char *error)
 {
 	if (error)
 		perror(error);
 	exit(EXIT_FAILURE);
 }
-
+/**
+ * trim_newline - removes newline from the end of the str.
+ * @str: string to be inputed
+ * Return: str
+ */
 char *trim_newline(char *str)
 {
 	size_t len = _strlen(str);
