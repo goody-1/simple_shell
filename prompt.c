@@ -1,5 +1,10 @@
 #include "main.h"
 
+/**
+ * prompt - This is a function that can display the prompt.
+ * Return: return always success.
+ *
+ */
 char *prompt(void)
 {
 	char *prompt = "#custom$ ", *input = NULL;
@@ -16,6 +21,12 @@ char *prompt(void)
 	}
 	return (input);
 }
+
+/**
+ * read_line - function used to read the line of text from a standard input
+ * @input: user input
+ * Return: return always success
+ */
 
 char *read_line(FILE *input)
 {
