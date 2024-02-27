@@ -1,5 +1,14 @@
 #include "main.h"
 
+/**
+ * split_string - splits a string by provided delimeters
+ *
+ * @str: string to be splitted
+ * @delimiters: string of delimeters
+ * @num_words: pointer to number of words
+ *
+ * Return: an array of words splitted or NULL if error
+*/
 char **split_string(const char *str, const char *delimiters,
 					size_t *num_words)
 {
@@ -27,7 +36,8 @@ char **split_string(const char *str, const char *delimiters,
 		{ /* Check if the array needs to be resized */
 			old_size = capacity;
 			capacity *= 2;
-			words = _realloc(words, old_size * sizeof(char *), capacity * sizeof(char *));
+			words = _realloc(words, old_size * sizeof(char *),
+								capacity * sizeof(char *));
 			if (words == NULL)
 				perror_handler(mem_error);
 		}
@@ -42,6 +52,13 @@ char **split_string(const char *str, const char *delimiters,
 	return (words);
 }
 
+/**
+ * perror_handler - handles perror
+ *
+ * @error: custom error heading
+ *
+ * Return: void
+*/
 void perror_handler(char *error)
 {
 	if (error)
@@ -49,6 +66,13 @@ void perror_handler(char *error)
 	exit(EXIT_FAILURE);
 }
 
+/**
+ * trim_newline - remove trailing spaces from string
+ *
+ * @str: string to be trimmed
+ *
+ * Return: trimmed string or NULL if error
+*/
 char *trim_newline(char *str)
 {
 	size_t len = _strlen(str);
