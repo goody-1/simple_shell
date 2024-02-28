@@ -1,5 +1,14 @@
 #include "main.h"
 
+/**
+ * main - starting point for programme execution
+ * @list: a pointer pointing to a list
+ * @num_words: number of words to be counted in a string
+ * @str: input str
+ *
+ * Return: always success
+ */
+
 
 int main(void)
 {
@@ -41,6 +50,9 @@ int main(void)
 	return (0);
 }
 
+/**
+ * handle_exec - this is a function that executes the prompt
+ */
 void handle_exec(char **list, char *str, int ppid)
 {
 	int status, no_kill = 0, terminate = 1;
@@ -72,6 +84,8 @@ void handle_exec(char **list, char *str, int ppid)
 	wait(&status); /* wait for child process to finish */
 }
 
+/**
+ * print_environment - 
 void print_environment(void)
 {
 	while (*environ != NULL)
