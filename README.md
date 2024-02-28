@@ -11,7 +11,8 @@ As instructed, the shell should be compiled by using the gcc -Wall -Werror -Wext
 There is direct interaction between the shell program and the user where the shell displays prompt to the user and awaits (command) input through the keyboard
 
 ($) exit
-$ 
+$
+ 
 the program can be exited by typing the 'exit' command or ctrl+D
 
  Non interactive mode
@@ -22,5 +23,6 @@ $ echo "/bin/ls" | ./hsh
 
 
 Credits
+
 codes written by: Goodness Atunde and Isah Bashir
 # The Simple Shell Project at ALX-SE
