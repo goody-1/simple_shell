@@ -1,12 +1,10 @@
 #include "main.h"
 
 /**
-=======
  * main - entry to program
  *
  * Return: always success
 */
->>>>>>> e3438031112b8a66ced38bf060f0609c3e21433f
 int main(void)
 {
 	char *str, **list;
@@ -48,7 +46,6 @@ int main(void)
 }
 
 /**
-=======
  * handle_exec - handle core execution of shell
  *
  * @list: list of words / argument passed to the shell
@@ -57,7 +54,6 @@ int main(void)
  *
  * Return: void
 */
->>>>>>> e3438031112b8a66ced38bf060f0609c3e21433f
 void handle_exec(char **list, char *str, int ppid)
 {
 	int status, no_kill = 0, terminate = 1;
@@ -90,12 +86,10 @@ void handle_exec(char **list, char *str, int ppid)
 }
 
 /**
-=======
  * print_environment - print environment when command is entered
  *
  * Return: void
 */
->>>>>>> e3438031112b8a66ced38bf060f0609c3e21433f
 void print_environment(void)
 {
 	while (*environ != NULL)
