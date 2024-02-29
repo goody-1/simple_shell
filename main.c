@@ -97,7 +97,7 @@ void handle_exec(char **list, char *str, int ppid)
 	}
 	wait(&status); /* wait for child process to finish */
 	if (!WIFEXITED(status) || WEXITSTATUS(status) != EXIT_SUCCESS)
-		exit_code = EXIT_FAILURE;
+		exit_code = 2;
 }
 
 /**
