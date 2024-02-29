@@ -68,17 +68,17 @@ void handle_exec(char **list, char *str, int ppid)
 		if (!list)
 			handle_exit(list, NULL, ppid, EXIT_SUCCESS, NULL, terminate);
 
-		if (_strcmp(list[0], "exit") == 0)
+		if (list[0] && (_strcmp(list[0], "exit") == 0))
 			handle_exit(list, str, ppid, EXIT_SUCCESS, NULL, terminate);
 
-		if (_strcmp(list[0], "env") == 0 || _strcmp(list[0], "printenv") == 0)
+		if (list[0] && (_strcmp(list[0], "env") == 0 || _strcmp(list[0], "printenv") == 0))
 		{
 			print_environment();
 			handle_exit(list, str, ppid, EXIT_SUCCESS, NULL, no_kill);
 		}
 
 		/* handle commands */
-		if (execve(list[0], list, environ) == -1)
+		if (list[0] && (execve(list[0], list, environ) == -1))
 			handle_exit(list, str, ppid, EXIT_FAILURE, "./shell", no_kill);
 	}
 
