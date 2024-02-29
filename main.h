@@ -18,14 +18,21 @@ char **split_string(const char *str, const char *delimiters,
 char **word_list(char *str, char *delim);
 void handle_exec(char **list, char *str, int ppid);
 
-/*** helper functions ***/
+/*** HELPER FUNCTIONS ***/
+/*==================================*/
+/* defined in string_functions */
 size_t _strlen(const char *s);
 int _strcmp(char *s1, char *s2);
+int _strncmp(char *s1, char *s2, size_t n);
 char *_strcpy(char *dest, const char *src);
-void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
 char *_strdup(const char *src);
 
-/* defined in simple*/
+/* defined in mem_functions */
+char *_memcpy(char *dest, char *src, unsigned int n);
+void *_memmove(void *dest, const void *src, size_t n);
+void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
+
+/* defined in main */
 void print_environment(void);
 
 /* defined in split_str */
