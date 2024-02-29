@@ -65,7 +65,7 @@ void handle_exec(char **list, char *str, int ppid)
 	if (child == 0)
 	{
 		 /* case where input to getline function is -1: CTRL + D */
-		if (!list || !list[0])
+		if (!list)
 			handle_exit(list, NULL, ppid, EXIT_SUCCESS, NULL, terminate);
 
 		if (_strcmp(list[0], "exit") == 0)
