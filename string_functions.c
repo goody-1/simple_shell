@@ -78,6 +78,43 @@ int _strcmp(char *s1, char *s2)
 }
 
 /**
+* _strncmp - compares n bytes of two strings
+*
+* Description: should work exactly like strncmp
+*
+* @s1: first string to be compared
+* @s2: second string to be compared
+* @n: number of characters to compare
+*
+* Return: an interger: 0 to mean they are equal,
+*			1 to mean the first string is greater, -1 otherwise
+*/
+
+int _strncmp(char *s1, char *s2, size_t n)
+{
+	size_t i;
+
+	for (i = 0; i < n && s1[i] != '\0' && s2[i] != '\0'; i++)
+	{
+		if (s1[i] > s2[i])
+			return (1);
+		else if (s1[i] < s2[i])
+			return (-1);
+	}
+
+	/* if specified number of characters is not reached */
+	if (i < n)
+	{
+		if (s1[i] != '\0')
+			return (1);
+		else if (s2[i] != '\0')
+			return (-1);
+	}
+
+	return (0);
+}
+
+/**
  * _strdup - duplicates the string
  * @src: source pointer
  * Return: duplicate copy
@@ -91,47 +128,4 @@ char *_strdup(const char *src)
 		return (NULL);
 
 	return (_strcpy(dest, src));
-}
-
-/**
- * _realloc - reallocates memory block, using malloc
- *
- * @ptr: pointer to memory previously allocated
- * @old_size: previous memory size
- * @new_size: new memory size
- *
- * Return: pointer to allocated memory
- *          or NULL if size is 0 or malloc fails or nmemb is 0
-*/
-
-void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size)
-{
-	void *mem;
-	unsigned char *byte_mem;
-	unsigned int i, size;
-
-	if (new_size == old_size)
-		return (ptr);
-	if (ptr != NULL && new_size == 0)
-	{
-		free(ptr);
-		return (NULL);
-	}
-
-	mem = malloc(new_size);
-	if (mem == NULL)
-		return (NULL);
-
-	if (ptr == NULL)
-		return (mem);
-
-	/* let size to be used be the minimum of old and new sizes */
-	size = new_size < old_size ? new_size : old_size;
-	byte_mem = (unsigned char *)mem;
-
-	for (i = 0; i < size; i++)
-		byte_mem[i] = ((unsigned char *)ptr)[i];
-
-	free(ptr);
-	return (mem);
 }
