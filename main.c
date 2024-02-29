@@ -74,6 +74,8 @@ void handle_exec(char **list, char *str, int ppid)
 		list[0][new_len - 1] = '\0';
 	}
 
+	if (list && list[0] && (_strcmp(list[0], "exit") == 0))
+		exit(EXIT_SUCCESS);
 	child = fork();
 	if (child == -1)
 		handle_exit(list, str, ppid, EXIT_FAILURE, "fork", terminate);
@@ -82,8 +84,6 @@ void handle_exec(char **list, char *str, int ppid)
 	{	/* case where input to getline function is -1: CTRL + D */
 		if (!list)
 			handle_exit(list, NULL, ppid, EXIT_SUCCESS, NULL, terminate);
-		if (list[0] && (_strcmp(list[0], "exit") == 0))
-			handle_exit(list, str, ppid, 0, NULL, terminate);
 
 		if (list[0] && (_strcmp(list[0], "env") == 0 ||
 			_strcmp(list[0], "printenv") == 0))
@@ -93,7 +93,7 @@ void handle_exec(char **list, char *str, int ppid)
 		}
 		/* handle commands */
 		if (list[0] && (execve(list[0], list, environ) == -1))
-			handle_exit(list, str, ppid, EXIT_FAILURE, "./shell", no_kill);
+			handle_exit(list, str, ppid, EXIT_FAILURE, "./shell", terminate);
 	}
 	wait(&status); /* wait for child process to finish */
 }
