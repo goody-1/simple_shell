@@ -75,7 +75,11 @@ void handle_exec(char **list, char *str, int ppid)
 	}
 
 	if (list && list[0] && (_strcmp(list[0], "exit") == 0))
+	{
+		free_list(list);
+		free(str);
 		exit(EXIT_SUCCESS);
+	}
 	child = fork();
 	if (child == -1)
 		handle_exit(list, str, ppid, EXIT_FAILURE, "fork", terminate);
@@ -93,7 +97,7 @@ void handle_exec(char **list, char *str, int ppid)
 		}
 		/* handle commands */
 		if (list[0] && (execve(list[0], list, environ) == -1))
-			handle_exit(list, str, ppid, EXIT_FAILURE, "./shell", terminate);
+			handle_exit(list, str, ppid, EXIT_FAILURE, "./shell", no_kill);
 	}
 	wait(&status); /* wait for child process to finish */
 }
