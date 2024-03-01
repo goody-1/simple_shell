@@ -63,7 +63,7 @@ void handle_exec(char **list, char *str, int ppid, int *exit_code)
 
 	if (list && !list[0])
 		return;
-	format_command(list);
+
 	if (list && list[0] && (_strcmp(list[0], "exit") == 0))
 	{
 		if (list[1])
@@ -93,7 +93,11 @@ void handle_exec(char **list, char *str, int ppid, int *exit_code)
 		}
 		/* handle commands */
 		if (list[0] && (execve(list[0], list, environ) == -1))
-			handle_exit(list, str, ppid, EXIT_FAILURE, "./shell", no_kill);
+		{
+			format_command(list);
+			if (list[0] && (execve(list[0], list, environ) == -1))
+				handle_exit(list, str, ppid, EXIT_FAILURE, "./shell", no_kill);
+		}
 	}
 	wait(&status); /* wait for child process to finish */
 	if (!WIFEXITED(status) || WEXITSTATUS(status) != EXIT_SUCCESS)
