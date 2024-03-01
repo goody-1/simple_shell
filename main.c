@@ -1,5 +1,6 @@
 #include "main.h"
 
+int exit_code = EXIT_SUCCESS;
 /**
  * main - entry to program
  *
@@ -73,13 +74,9 @@ void handle_exec(char **list, char *str, int ppid)
 		_memcpy(list[0], prefix, _strlen(prefix));
 		list[0][new_len - 1] = '\0';
 	}
-
 	if (list && list[0] && (_strcmp(list[0], "exit") == 0))
-	{
-		free_list(list);
-		free(str);
-		exit(EXIT_SUCCESS);
-	}
+		handle_exit(list, str, ppid, exit_code, NULL, no_kill);
+
 	child = fork();
 	if (child == -1)
 		handle_exit(list, str, ppid, EXIT_FAILURE, "fork", terminate);
@@ -88,7 +85,6 @@ void handle_exec(char **list, char *str, int ppid)
 	{	/* case where input to getline function is -1: CTRL + D */
 		if (!list)
 			handle_exit(list, NULL, ppid, EXIT_SUCCESS, NULL, terminate);
-
 		if (list[0] && (_strcmp(list[0], "env") == 0 ||
 			_strcmp(list[0], "printenv") == 0))
 		{
@@ -100,6 +96,8 @@ void handle_exec(char **list, char *str, int ppid)
 			handle_exit(list, str, ppid, EXIT_FAILURE, "./shell", no_kill);
 	}
 	wait(&status); /* wait for child process to finish */
+	if (!WIFEXITED(status) || WEXITSTATUS(status) != EXIT_SUCCESS)
+		exit_code = EXIT_FAILURE;
 }
 
 /**

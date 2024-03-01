@@ -11,6 +11,7 @@
 #include <signal.h>
 
 extern char **environ;
+extern int exit_code;
 
 /* core functions */
 char **split_string(const char *str, const char *delimiters,
