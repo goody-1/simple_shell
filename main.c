@@ -61,6 +61,8 @@ void handle_exec(char **list, char *str, int ppid, int *exit_code)
 	int status, no_kill = 0, terminate = 1;
 	pid_t child;
 
+	if (list && !list[0])
+		return;
 	format_command(list);
 	if (list && list[0] && (_strcmp(list[0], "exit") == 0))
 	{
