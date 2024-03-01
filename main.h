@@ -33,6 +33,7 @@ void *_memmove(void *dest, const void *src, size_t n);
 void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
 
 /* defined in main */
+void format_command(char **list);
 void print_environment(void);
 
 /* defined in split_str */

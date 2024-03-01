@@ -52,28 +52,16 @@ int main(void)
  * @list: list of words / argument passed to the shell
  * @str: the string passed
  * @ppid: the pid of the core process
+ * @exit_code: exit_code, tracked by memory address
  *
  * Return: void
 */
 void handle_exec(char **list, char *str, int ppid, int *exit_code)
 {
 	int status, no_kill = 0, terminate = 1;
-	char *prefix = "/bin/";
 	pid_t child;
 
-	if (list && list[0] && (_strcmp(list[0], "exit") != 0) &&
-		list[0][0] != '.' && (_strncmp(list[0], prefix, 5) != 0))
-	{
-		size_t old_len = _strlen(list[0]);
-		size_t new_len = _strlen(prefix) + old_len + 1;
-
-		list[0] = _realloc(list[0], old_len, new_len);
-		if (!list[0])
-			return;
-		_memmove(list[0] + _strlen(prefix), list[0], old_len);
-		_memcpy(list[0], prefix, _strlen(prefix));
-		list[0][new_len - 1] = '\0';
-	}
+	format_command(list);
 	if (list && list[0] && (_strcmp(list[0], "exit") == 0))
 	{
 		if (list[1])
@@ -110,6 +98,30 @@ void handle_exec(char **list, char *str, int ppid, int *exit_code)
 		*exit_code = 2;
 }
 
+/**
+ * format_command - prepend "/bin/" to command if necessary
+ * @list: list of commands and arguments
+ *
+ * Return: void
+*/
+void format_command(char **list)
+{
+	char *prefix = "/bin/";
+
+	if (list && list[0] && (_strcmp(list[0], "exit") != 0) &&
+		list[0][0] != '.' && (_strncmp(list[0], prefix, 5) != 0))
+	{
+		size_t old_len = _strlen(list[0]);
+		size_t new_len = _strlen(prefix) + old_len + 1;
+
+		list[0] = _realloc(list[0], old_len, new_len);
+		if (!list[0])
+			return;
+		_memmove(list[0] + _strlen(prefix), list[0], old_len);
+		_memcpy(list[0], prefix, _strlen(prefix));
+		list[0][new_len - 1] = '\0';
+	}
+}
 /**
  * print_environment - print environment when command is entered
  *
