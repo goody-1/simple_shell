@@ -57,8 +57,30 @@ int main(void)
 void handle_exec(char **list, char *str, int ppid)
 {
 	int status, no_kill = 0, terminate = 1;
-	pid_t child = fork();
+	char *prefix = "/bin/";
+	pid_t child;
 
+	if (list && list[0] && (_strcmp(list[0], "exit") != 0) &&
+		(_strncmp(list[0], prefix, 5) != 0))
+	{
+		size_t old_len = _strlen(list[0]);
+		size_t new_len = _strlen(prefix) + old_len + 1;
+
+		list[0] = _realloc(list[0], old_len, new_len);
+		if (!list[0])
+			return;
+		_memmove(list[0] + _strlen(prefix), list[0], old_len);
+		_memcpy(list[0], prefix, _strlen(prefix));
+		list[0][new_len - 1] = '\0';
+	}
+
+	if (list && list[0] && (_strcmp(list[0], "exit") == 0))
+	{
+		free_list(list);
+		free(str);
+		exit(EXIT_SUCCESS);
+	}
+	child = fork();
 	if (child == -1)
 		handle_exit(list, str, ppid, EXIT_FAILURE, "fork", terminate);
 
@@ -66,9 +88,6 @@ void handle_exec(char **list, char *str, int ppid)
 	{	/* case where input to getline function is -1: CTRL + D */
 		if (!list)
 			handle_exit(list, NULL, ppid, EXIT_SUCCESS, NULL, terminate);
-
-		if (list[0] && (_strcmp(list[0], "exit") == 0))
-			handle_exit(list, str, ppid, EXIT_SUCCESS, NULL, terminate);
 
 		if (list[0] && (_strcmp(list[0], "env") == 0 ||
 			_strcmp(list[0], "printenv") == 0))
@@ -78,11 +97,9 @@ void handle_exec(char **list, char *str, int ppid)
 		}
 		/* handle commands */
 		if (list[0] && (execve(list[0], list, environ) == -1))
-			handle_exit(list, str, ppid, EXIT_FAILURE, "./shell", terminate);
+			handle_exit(list, str, ppid, EXIT_FAILURE, "./shell", no_kill);
 	}
 	wait(&status); /* wait for child process to finish */
-	if (!WIFEXITED(status) || WEXITSTATUS(status) != EXIT_SUCCESS)
-		exit_code = 2;
 }
 
 /**
