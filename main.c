@@ -93,7 +93,7 @@ void handle_exec(char **list, char *str, int ppid)
 		}
 		/* handle commands */
 		if (list[0] && (execve(list[0], list, environ) == -1))
-			handle_exit(list, str, ppid, EXIT_FAILURE, "./shell", no_kill);
+			handle_exit(list, str, ppid, EXIT_FAILURE, "./shell", terminate);
 	}
 	wait(&status); /* wait for child process to finish */
 	if (!WIFEXITED(status) || WEXITSTATUS(status) != EXIT_SUCCESS)
