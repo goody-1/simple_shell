@@ -16,7 +16,7 @@ extern char **environ;
 char **split_string(const char *str, const char *delimiters,
 					size_t *num_words);
 char **word_list(char *str, char *delim);
-void handle_exec(char **list, char *str, int ppid);
+void handle_exec(char **list, char *str, int ppid, int *exit_code);
 
 /*** HELPER FUNCTIONS ***/
 /*==================================*/
