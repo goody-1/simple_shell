@@ -75,7 +75,16 @@ void handle_exec(char **list, char *str, int ppid)
 		list[0][new_len - 1] = '\0';
 	}
 	if (list && list[0] && (_strcmp(list[0], "exit") == 0))
+	{
+		if (list[1])
+		{
+			if (is_integer(list[1]) == 1)
+				exit_code = _atoi(list[1]);
+			else
+				exit_code = 2;
+		}
 		handle_exit(list, str, ppid, exit_code, NULL, no_kill);
+	}
 
 	child = fork();
 	if (child == -1)
