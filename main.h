@@ -45,6 +45,8 @@ void free_list(char **list);
 void handle_kill(int signum __attribute__((unused)));
 void handle_exit(char **list, char *str, int ppid,
 					int exit_status, char *p_err, int terminate);
+int is_integer(const char *s);
+int _atoi(char *s);
 
 /* defined in prompt */
 char *prompt(void);
