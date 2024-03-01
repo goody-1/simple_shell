@@ -9,6 +9,7 @@ int main(void)
 {
 	char *str, **list;
 	size_t num_words;
+	int exit_code = EXIT_SUCCESS;
 	pid_t ppid = getpid();
 	FILE *input_file = stdin;
 
@@ -20,7 +21,7 @@ int main(void)
 			list = split_string(str, " \t\n", &num_words);
 			list[num_words] = NULL;
 
-			handle_exec(list, str, ppid);
+			handle_exec(list, str, ppid, &exit_code);
 			if (list)
 				free_list(list);
 			if (str)
@@ -34,7 +35,7 @@ int main(void)
 			list = split_string(str, " \t\n", &num_words);
 			list[num_words] = NULL;
 
-			handle_exec(list, str, ppid);
+			handle_exec(list, str, ppid, &exit_code);
 
 			if (list)
 				free_list(list);
@@ -54,7 +55,7 @@ int main(void)
  *
  * Return: void
 */
-void handle_exec(char **list, char *str, int ppid)
+void handle_exec(char **list, char *str, int ppid, int *exit_code)
 {
 	int status, no_kill = 0, terminate = 1;
 	char *prefix = "/bin/";
@@ -74,7 +75,16 @@ void handle_exec(char **list, char *str, int ppid)
 		list[0][new_len - 1] = '\0';
 	}
 	if (list && list[0] && (_strcmp(list[0], "exit") == 0))
-		handle_exit(list, str, ppid, EXIT_SUCCESS, NULL, no_kill);
+	{
+		if (list[1])
+		{
+			if (is_integer(list[1]) == 1)
+				*exit_code = _atoi(list[1]);
+			else
+				*exit_code = 2;
+		}
+		handle_exit(list, str, ppid, *exit_code, NULL, no_kill);
+	}
 
 	child = fork();
 	if (child == -1)
@@ -96,6 +106,8 @@ void handle_exec(char **list, char *str, int ppid)
 			handle_exit(list, str, ppid, EXIT_FAILURE, "./shell", no_kill);
 	}
 	wait(&status); /* wait for child process to finish */
+	if (!WIFEXITED(status) || WEXITSTATUS(status) != EXIT_SUCCESS)
+		*exit_code = 2;
 }
 
 /**
