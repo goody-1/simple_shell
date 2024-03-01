@@ -1,6 +1,5 @@
 #include "main.h"
 
-int exit_code = EXIT_SUCCESS;
 /**
  * main - entry to program
  *
@@ -58,26 +57,8 @@ int main(void)
 void handle_exec(char **list, char *str, int ppid)
 {
 	int status, no_kill = 0, terminate = 1;
-	char *prefix = "/bin/";
-	pid_t child;
+	pid_t child = fork();
 
-	if (list && list[0] && (_strcmp(list[0], "exit") != 0) &&
-		(_strncmp(list[0], prefix, 5) != 0))
-	{
-		size_t old_len = _strlen(list[0]);
-		size_t new_len = _strlen(prefix) + old_len + 1;
-
-		list[0] = _realloc(list[0], old_len, new_len);
-		if (!list[0])
-			return;
-		_memmove(list[0] + _strlen(prefix), list[0], old_len);
-		_memcpy(list[0], prefix, _strlen(prefix));
-		list[0][new_len - 1] = '\0';
-	}
-	if (list && list[0] && (_strcmp(list[0], "exit") == 0))
-		handle_exit(list, str, ppid, exit_code, NULL, no_kill);
-
-	child = fork();
 	if (child == -1)
 		handle_exit(list, str, ppid, EXIT_FAILURE, "fork", terminate);
 
@@ -85,6 +66,10 @@ void handle_exec(char **list, char *str, int ppid)
 	{	/* case where input to getline function is -1: CTRL + D */
 		if (!list)
 			handle_exit(list, NULL, ppid, EXIT_SUCCESS, NULL, terminate);
+
+		if (list[0] && (_strcmp(list[0], "exit") == 0))
+			handle_exit(list, str, ppid, EXIT_SUCCESS, NULL, terminate);
+
 		if (list[0] && (_strcmp(list[0], "env") == 0 ||
 			_strcmp(list[0], "printenv") == 0))
 		{
