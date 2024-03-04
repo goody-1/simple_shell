@@ -66,7 +66,7 @@ void handle_exec(char **list, char *str, int ppid, int *exit_code)
 
 	if (list && list[0] && (_strcmp(list[0], "exit") == 0))
 	{
-		if (list[1])
+		if (list[1] && _strlen(list[1]) > 0)
 		{
 			if (is_integer(list[1]) == 1)
 				*exit_code = _atoi(list[1]);
