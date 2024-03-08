@@ -76,41 +76,42 @@ void handle_exec(char **list, char *str, int ppid, int *exit_code)
 		handle_exit(list, str, ppid, *exit_code, NULL, no_kill);
 	}
 
-	child = fork();
-	if (child == -1)
-		handle_exit(list, str, ppid, EXIT_FAILURE, "fork", terminate);
+	if (list[0] && (_strcmp(list[0], "cd") == 0))
+	{
+		if (list[1] && list[1][0] == '-')
+			no_kill = 1;
 
-	if (child == 0)
-	{	/* case where input to getline function is -1: CTRL + D */
-		if (!list)
-			handle_exit(list, NULL, ppid, EXIT_SUCCESS, NULL, terminate);
-
-		if (list[0] && (_strcmp(list[0], "cd") == 0))
-		{
-			if (list[1] && list[1][0] == '-')
-				no_kill = 1;
-			if (list[1] && cd(list[1]) == -1)
-				handle_exit(list, str, ppid, EXIT_FAILURE, "cd", no_kill);
-			handle_exit(list, str, ppid, EXIT_SUCCESS, NULL, no_kill);
-		}
-
-		if (list[0] && (_strcmp(list[0], "env") == 0 ||
-			_strcmp(list[0], "printenv") == 0))
-		{
-			print_environment();
-			handle_exit(list, str, ppid, EXIT_SUCCESS, NULL, no_kill);
-		}
-		/* handle commands */
-		if (list[0] && (execve(list[0], list, environ) == -1))
-		{
-			format_command(list);
-			if (list[0] && (execve(list[0], list, environ) == -1))
-				handle_exit(list, str, ppid, EXIT_FAILURE, "./shell", no_kill);
-		}
+		cd(list[1]);
 	}
-	wait(&status); /* wait for child process to finish */
-	if (!WIFEXITED(status) || WEXITSTATUS(status) != EXIT_SUCCESS)
-		*exit_code = 2;
+	else
+	{
+		child = fork();
+		if (child == -1)
+			handle_exit(list, str, ppid, EXIT_FAILURE, "fork", terminate);
+
+		if (child == 0)
+		{	/* case where input to getline function is -1: CTRL + D */
+			if (!list)
+				handle_exit(list, NULL, ppid, EXIT_SUCCESS, NULL, terminate);
+
+			if (list[0] && (_strcmp(list[0], "env") == 0 ||
+				_strcmp(list[0], "printenv") == 0))
+			{
+				print_environment();
+				handle_exit(list, str, ppid, EXIT_SUCCESS, NULL, no_kill);
+			}
+			/* handle commands */
+			if (list[0] && (execve(list[0], list, environ) == -1))
+			{
+				format_command(list);
+				if (list[0] && (execve(list[0], list, environ) == -1))
+					handle_exit(list, str, ppid, EXIT_FAILURE, "./shell", no_kill);
+			}
+		}
+		wait(&status); /* wait for child process to finish */
+		if (!WIFEXITED(status) || WEXITSTATUS(status) != EXIT_SUCCESS)
+			*exit_code = 2;
+	}
 }
 
 /**
