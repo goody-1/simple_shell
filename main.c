@@ -85,6 +85,15 @@ void handle_exec(char **list, char *str, int ppid, int *exit_code)
 		if (!list)
 			handle_exit(list, NULL, ppid, EXIT_SUCCESS, NULL, terminate);
 
+		if (list[0] && (_strcmp(list[0], "cd") == 0))
+		{
+			if (list[1] && list[1][0] == '-')
+				no_kill = 1;
+			if (list[1] && cd(list[1]) == -1)
+				handle_exit(list, str, ppid, EXIT_FAILURE, "cd", no_kill);
+			handle_exit(list, str, ppid, EXIT_SUCCESS, NULL, no_kill);
+		}
+
 		if (list[0] && (_strcmp(list[0], "env") == 0 ||
 			_strcmp(list[0], "printenv") == 0))
 		{

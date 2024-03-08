@@ -52,4 +52,8 @@ int _atoi(char *s);
 char *prompt(void);
 char *read_line(FILE *input);
 
+/* defined in dir_functions */
+int change_directory(const char *directory);
+int cd(const char *directory);
+
 #endif /* MAIN_H */
